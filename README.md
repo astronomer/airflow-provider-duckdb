@@ -14,6 +14,11 @@ The connection type is `duckdb`. It supports setting the following parameters:
 
 - `file` (optional): The path to the DuckDB database file. If not set, operations will be done in-memory.
 
+Example connection strings:
+
+- `duckdb://:memory:`
+- `duckdb:///tmp/duckdb.db`
+
 ## Usage
 
 ```python
