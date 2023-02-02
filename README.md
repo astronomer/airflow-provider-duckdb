@@ -5,7 +5,7 @@ A DuckDB provider for Airflow. This provider exposes a hook/connection that retu
 ## Installation
 
 ```bash
-pip install apache-airflow-providers-duckdb
+pip install airflow-provider-duckdb
 ```
 
 ## Connection
