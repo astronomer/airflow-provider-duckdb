@@ -16,7 +16,7 @@ setup(
     },
     license="Apache License 2.0",
     packages=["duckdb_provider", "duckdb_provider.hooks"],
-    install_requires=["apache-airflow>=2.0", "duckdb>=0.5.0"],
+    install_requires=["apache-airflow>=2.0", "duckdb>=0.5.0", "duckdb-engine"],
     setup_requires=["setuptools", "wheel"],
     author="Julian LaNeve",
     author_email="julian@astronomer.io",
