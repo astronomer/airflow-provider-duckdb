@@ -4,5 +4,5 @@ def get_provider_info():
         "name": "DuckDB Airflow Provider",
         "description": "DuckDB (duckdb.org) provider for Apache Airflow",
         "hook-class-names": ["duckdb_provider.hooks.duckdb_hook.DuckDBHook"],
-        "versions": ["0.0.1"]
+        "versions": ["0.0.2"],
     }
