@@ -7,5 +7,5 @@ def get_provider_info():
         "connection-types": [
             {"connection-type": "duckdb", "hook-class-name": "duckdb_provider.hooks.duckdb_hook.DuckDBHook"}
         ],
-        "versions": ["0.2.0"],
+        "versions": ["0.1.0"],
     }
