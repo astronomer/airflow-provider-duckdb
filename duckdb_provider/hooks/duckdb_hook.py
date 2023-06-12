@@ -23,13 +23,19 @@ class DuckDBHook(DbApiHook):
         # get the airflow connection object with config
         airflow_conn = self.get_connection(conn_id)
 
-        # return the duckdb connection
-        # either in memory if we don't have a host
+        # if no host was specified use an in-memory database (empty string)
         if not airflow_conn.host:
-            return duckdb.connect(":memory:")
+            db_name = ""
+        else:
+            db_name = airflow_conn.host
 
-        # or from a file specified by the host field
-        return duckdb.connect(airflow_conn.host)
+        # return the connection to MotherDuck if a token was specified
+        # if db_name is empty, the default MotherDuck database will be used
+        if airflow_conn.password:
+            return duckdb.connect("motherduck:" + db_name "?token=" + airflow_conn.password)
+        
+        # otherwise return a local connection
+        return duckdb.connect(db_name)
 
     def get_uri(self) -> str:
         """Override DbApiHook get_uri method for get_sqlalchemy_engine()"""
@@ -38,6 +44,10 @@ class DuckDBHook(DbApiHook):
 
         # get the airflow connection object with config
         airflow_conn = self.get_connection(conn_id)
+
+        # if a token was given, return a MotherDuck URI
+        if airflow_conn.password:
+            return "motherduck:///" + airflow_conn.host
 
         # if we don't have a host, assume we're using an in-memory database
         if not airflow_conn.host:
@@ -50,8 +60,9 @@ class DuckDBHook(DbApiHook):
     def get_ui_field_behaviour() -> Dict:
         """Returns custom field behaviour"""
         return {
-            "hidden_fields": ["login", "password", "schema", "port", "extra"],
+            "hidden_fields": ["login", "schema", "port", "extra"],
             "relabeling": {
-                "host": "File (leave blank for in-memory database)",
+                "host": "File or MotherDuck database (leave blank for in-memory database)",
+                "password": "MotherDuck Service token (leave blank for local database)"
             },
         }
