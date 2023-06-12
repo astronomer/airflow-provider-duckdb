@@ -47,7 +47,7 @@ class DuckDBHook(DbApiHook):
 
         # if a token was given, return a MotherDuck URI
         if airflow_conn.password:
-            return "motherduck:///" + airflow_conn.host
+            return "motherduck:///" + airflow_conn.host + "?token=" + airflow_conn.password
 
         # if we don't have a host, assume we're using an in-memory database
         if not airflow_conn.host:
