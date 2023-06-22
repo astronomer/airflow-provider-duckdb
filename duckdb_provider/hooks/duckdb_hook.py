@@ -23,46 +23,55 @@ class DuckDBHook(DbApiHook):
         # get the airflow connection object with config
         airflow_conn = self.get_connection(conn_id)
 
-        # if no host was specified use an in-memory database (empty string)
-        if not airflow_conn.host:
-            db_name = ""
+        # define the connection string based on the specified service
+        if airflow_conn.host == "motherduck":
+            if not airflow_conn.password:
+                raise ValueError("Connecting to MotherDuck requires a token!")
+            else:
+                connection_string = f"motherduck:{airflow_conn.schema}?token={airflow_conn.password}"
+        elif airflow_conn.host == "duckdb":
+            connection_string = f"{airflow_conn.schema}"
         else:
-            db_name = airflow_conn.host
-
-        # return the connection to MotherDuck if a token was specified
-        # if db_name is empty, the default MotherDuck database will be used
-        if airflow_conn.password:
-            return duckdb.connect("motherduck:" + db_name "?token=" + airflow_conn.password)
+            raise ValueError("Service name must be 'motherduck' or 'duckdb'")
         
-        # otherwise return a local connection
-        return duckdb.connect(db_name)
+        print(f"Connecting to: {connection_string} ...")
+
+        return duckdb.connect(connection_string)
 
     def get_uri(self) -> str:
         """Override DbApiHook get_uri method for get_sqlalchemy_engine()"""
+
         # get the conn_id from the hook
         conn_id = getattr(self, self.conn_name_attr)
 
         # get the airflow connection object with config
         airflow_conn = self.get_connection(conn_id)
 
-        # if a token was given, return a MotherDuck URI
-        if airflow_conn.password:
-            return "motherduck:" + airflow_conn.host + "?token=" + airflow_conn.password
+        # define the connection string based on the specified service
+        if airflow_conn.host == "motherduck":
+            if not airflow_conn.password:
+                raise ValueError("Connecting to MotherDuck requires a token!")
+            else:
+                connection_string = f"motherduck:{airflow_conn.schema}?motherduck_token={airflow_conn.password}"
+        elif airflow_conn.host == "duckdb":
+            connection_string = f"{airflow_conn.schema}"
+        else:
+            raise ValueError("Service name must be 'motherduck' or 'duckdb'")
+        
+        print(f"Connecting to: {connection_string} ...")
 
-        # if we don't have a host, assume we're using an in-memory database
-        if not airflow_conn.host:
-            return "duckdb:///:memory:"
+        # return the URI for SQLAlchemy
+        return f"duckdb:///{connection_string}"
 
-        # otherwise return the host
-        return f"duckdb:///{airflow_conn.host}"
 
     @staticmethod
     def get_ui_field_behaviour() -> Dict:
         """Returns custom field behaviour"""
         return {
-            "hidden_fields": ["login", "schema", "port", "extra"],
+            "hidden_fields": ["login", "port", "extra"],
             "relabeling": {
-                "host": "File or MotherDuck database (leave blank for in-memory database)",
+                "host": "Service name ('motherduck' or 'duckdb')",
+                "schema": "Filepath to a local DuckDB database or name of a MotherDuck table (leave blank for in-memory database)",
                 "password": "MotherDuck Service token (leave blank for local database)"
             },
         }
