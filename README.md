@@ -14,20 +14,29 @@ pip install airflow-provider-duckdb
 
 The connection type is `duckdb`. It supports setting the following parameters:
 
-- `host` (optional): Path to local file or MotherDuck database (leave blank for in-memory database)
-- `password` (optional): MotherDuck Service token (leave blank for local database)
+| Airflow field name | Airflow UI label            | Description                                                                |
+| ------------------ | --------------------------- | -------------------------------------------------------------------------- |
+| `host`             | Path to local database file | Path to local file. Leave blank (with no password) for in-memory database. |
+| `schema`           | MotherDuck database name    | Name of the MotherDuck database. Leave blank for default.                  |
+| `password`         | MotherDuck Service token    | MotherDuck Service token. Leave blank for local database.                  |
 
 These have been relabeled in the Airflow UI for clarity.
 
 For example, if you want to connect to a local file:
 
-- `host`: `/path/to/file.db`
-- `password`: (leave blank)
+| Airflow field name | Airflow UI label            | Value              |
+| ------------------ | --------------------------- | ------------------ |
+| `host`             | Path to local database file | `/path/to/file.db` |
+| `schema`           | MotherDuck database name    | (leave blank)      |
+| `password`         | MotherDuck Service token    | (leave blank)      |
 
 If you want to connect to a MotherDuck database:
 
-- `host`: `<YOUR_DB_NAME>`
-- `password`: `<YOUR_MOTHERDUCK_SERVICE_TOKEN>`
+| Airflow field name | Airflow UI label            | Value                                        |
+| ------------------ | --------------------------- | -------------------------------------------- |
+| `host`             | Path to local database file | (leave blank)                                |
+| `schema`           | MotherDuck database name    | `<YOUR_DB_NAME>`, or leave blank for default |
+| `password`         | MotherDuck Service token    | `<YOUR_SERVICE_TOKEN>`                       |
 
 ## Usage
 
