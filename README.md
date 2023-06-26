@@ -2,6 +2,8 @@
 
 A DuckDB provider for Airflow. This provider exposes a hook/connection that returns a DuckDB connection.
 
+This works for either local or MotherDuck connections.
+
 ## Installation
 
 ```bash
@@ -12,12 +14,20 @@ pip install airflow-provider-duckdb
 
 The connection type is `duckdb`. It supports setting the following parameters:
 
-- `file` (optional): The path to the DuckDB database file. If not set, operations will be done in-memory.
+- `host` (optional): Path to local file or MotherDuck database (leave blank for in-memory database)
+- `password` (optional): MotherDuck Service token (leave blank for local database)
 
-Example connection strings:
+These have been relabeled in the Airflow UI for clarity.
 
-- `duckdb://:memory:`
-- `duckdb:///tmp/duckdb.db`
+For example, if you want to connect to a local file:
+
+- `host`: `/path/to/file.db`
+- `password`: (leave blank)
+
+If you want to connect to a MotherDuck database:
+
+- `host`: `<YOUR_DB_NAME>`
+- `password`: `<YOUR_MOTHERDUCK_SERVICE_TOKEN>`
 
 ## Usage
 
