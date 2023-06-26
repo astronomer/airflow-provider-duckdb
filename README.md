@@ -2,6 +2,8 @@
 
 A DuckDB provider for Airflow. This provider exposes a hook/connection that returns a DuckDB connection.
 
+This works for either local or MotherDuck connections.
+
 ## Installation
 
 ```bash
@@ -12,12 +14,29 @@ pip install airflow-provider-duckdb
 
 The connection type is `duckdb`. It supports setting the following parameters:
 
-- `file` (optional): The path to the DuckDB database file. If not set, operations will be done in-memory.
+| Airflow field name | Airflow UI label            | Description                                                                |
+| ------------------ | --------------------------- | -------------------------------------------------------------------------- |
+| `host`             | Path to local database file | Path to local file. Leave blank (with no password) for in-memory database. |
+| `schema`           | MotherDuck database name    | Name of the MotherDuck database. Leave blank for default.                  |
+| `password`         | MotherDuck Service token    | MotherDuck Service token. Leave blank for local database.                  |
 
-Example connection strings:
+These have been relabeled in the Airflow UI for clarity.
 
-- `duckdb://:memory:`
-- `duckdb:///tmp/duckdb.db`
+For example, if you want to connect to a local file:
+
+| Airflow field name | Airflow UI label            | Value              |
+| ------------------ | --------------------------- | ------------------ |
+| `host`             | Path to local database file | `/path/to/file.db` |
+| `schema`           | MotherDuck database name    | (leave blank)      |
+| `password`         | MotherDuck Service token    | (leave blank)      |
+
+If you want to connect to a MotherDuck database:
+
+| Airflow field name | Airflow UI label            | Value                                        |
+| ------------------ | --------------------------- | -------------------------------------------- |
+| `host`             | Path to local database file | (leave blank)                                |
+| `schema`           | MotherDuck database name    | `<YOUR_DB_NAME>`, or leave blank for default |
+| `password`         | MotherDuck Service token    | `<YOUR_SERVICE_TOKEN>`                       |
 
 ## Usage
 
